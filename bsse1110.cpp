@@ -51,7 +51,7 @@ int main()
     priority_queue<process, vector<process>, compareSJF> pqSJF;
     int i=1;
     averageTurnAround=0.0;
-    currentTime=arrival[0];
+    currentTime=arrival[1];
     while(1)
     {
         if(i<=n)
@@ -104,7 +104,7 @@ int main()
     }
 
     i=1;
-    currentTime=arrival[0];
+    currentTime=arrival[1];
     int remainingTime;
     int finish[n+1];
     averageTurnAround=0.0;
@@ -167,4 +167,59 @@ int main()
     cout << "\n\n";
 
     cout << "Round Robin Scheduling :" << endl;
+
+    i=1;
+    averageTurnAround=0.0;
+    averageWaiting=0.0;
+    currentTime=arrival[1];
+
+    queue<process> qRR;
+    int timeQuantum=4;
+    int runTime;
+    while(1)
+    {
+        if(i<=n)
+        while(arrival[i]<=currentTime)
+        {
+            qRR.push(process(i, arrival[i], burst[i], priority[i]));
+            i++;
+            if(i>n)
+            {
+                break;
+            }
+        }
+
+        if(qRR.empty())
+        {
+            break;
+        }
+        process temp=qRR.front();
+        qRR.pop();
+        runTime=min(timeQuantum, temp.burst);
+        cout << "Process " << temp.index << ": " << currentTime << " to " << currentTime+runTime << endl;
+        temp.burst-=runTime;
+        currentTime+=runTime;
+        if(temp.burst!=0)
+        {
+            qRR.push(process(temp.index, temp.arrival, temp.burst, temp.priority));
+        }
+
+        else
+        {
+            finish[temp.index]=currentTime;
+        }
+    }
+
+    for(int i=1;i<=n;i++)
+    {
+        turnAroundTime[i]=finish[i]-arrival[i];
+        waitingTime[i]=turnAroundTime[i]-burst[i];
+        cout << "Waiting time of process " << i << " is " << waitingTime[i] << endl;
+        averageTurnAround+=(double)(turnAroundTime[i]);
+        averageWaiting+=(double)(waitingTime[i]);
+    }
+    averageTurnAround=averageTurnAround/(double)(n);
+    averageWaiting=averageWaiting/(double)(n);
+    cout << "Average turnaround time is " << averageTurnAround << endl;
+    cout << "Average waiting time is " << averageWaiting << endl;
 }
