@@ -174,7 +174,7 @@ int main()
     currentTime=arrival[1];
 
     queue<process> qRR;
-    int timeQuantum=4;
+    int timeQuantum=10;
     int runTime;
     while(1)
     {
